@@ -75,6 +75,7 @@ class DistributionFiles:
         {'path': '/usr/lib/os-release', 'name': 'ClearLinux'},
         {'path': '/etc/coreos/update.conf', 'name': 'Coreos'},
         {'path': '/etc/os-release', 'name': 'Flatcar'},
+        {'path': '/etc/os-release', 'name': 'Azure'},
         {'path': '/etc/os-release', 'name': 'NA'},
     )
 
@@ -464,6 +465,24 @@ class DistributionFiles:
             flatcar_facts['distribution_version'] = version.group(1).strip('"')
 
         return True, flatcar_facts
+
+    def parse_distribution_file_Azure(self, name, data, path, collected_facts):
+        azure_facts = {}
+        distro = get_distribution()
+
+        if distro.lower() not in ['azurelinux', 'mariner']:
+            return False, azure_facts
+
+        if not data:
+            return False, azure_facts
+
+        azure_facts['distribution'] = 'Azure'
+        version = re.search("VERSION=(.*)", data)
+        if version:
+            azure_facts['distribution_major_version'] = version.group(1).strip('"').split('.')[0]
+            azure_facts['distribution_version'] = version.group(1).strip('"')
+
+        return True, azure_facts
 
     def parse_distribution_file_ClearLinux(self, name, data, path, collected_facts):
         clear_facts = {}

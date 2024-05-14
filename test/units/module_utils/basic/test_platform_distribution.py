@@ -51,6 +51,12 @@ class TestGetDistribution:
         with patch('ansible.module_utils.distro.id', return_value="arch"):
             assert get_distribution() == "Arch"
 
+        with patch('ansible.module_utils.distro.id', return_value="azurelinux"):
+            assert get_distribution() == "Azure"
+
+        with patch('ansible.modules.utils.distro.id', return_value="mariner"):
+            assert get_distribution() == "Azure"
+
         with patch('ansible.module_utils.distro.id', return_value="centos"):
             assert get_distribution() == "Centos"
 
